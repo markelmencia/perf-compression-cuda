@@ -30,22 +30,32 @@ void sort_lexical_order(char** table, int length) {
     qsort(table, length, sizeof(char*), cmp_lex);
 }
 
-int main() {
-    // Input MUST Include a null character
-    char* input = "BANANA&";
-    char** table = get_rotation_table(input, 7);
-
-    sort_lexical_order(table, 7);
-    for (int i = 0; i < 7; i++) {
-        for (int j = 0; j < 7; j++) {
-            printf("%c", table[i][j]);
-        }
-        free(table[i]);
-        printf("\n");
+char* get_output_string(char** table, int length) {
+    char* output = malloc(sizeof(char) * (length + 1));
+    for (int row = 0; row < length; row++) {
+        output[row] = table[row][length - 1];
     }
-    free(table);
+    output[length] = 0;
+    return output;
 }
 
-void bwt_transform() {
-    
+
+char* bwt_transform(char *input, int length) {
+    char** table = get_rotation_table(input, length);
+    sort_lexical_order(table, length);
+    char *output = get_output_string(table, length);
+    for (int i = 0; i < length; i++) {
+        free(table[i]);
+    }
+    free(table);
+    return output;
+}
+
+int main() {
+    // Input MUST Include a null character
+    char* input = "SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXEES&";
+    int length = strlen(input);
+    char* output = bwt_transform(input, length);
+    printf("%s\n", output);
+    free(output);
 }
